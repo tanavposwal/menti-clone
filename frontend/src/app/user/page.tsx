@@ -1,71 +1,67 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import { Quiz } from "../components/Quiz";
 import { LeaderBoard } from "../components/LeaderBoard";
+import { socket } from "@/socket";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export default function User() {
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [code, setCode] = useState("");
+
   if (!submitted) {
     return (
-      <div>
-        <div className="bg-gray-100 flex items-center justify-center h-screen">
-          <div className="text-center">
-            <div className="mb-8">
-              <h1 className="text-2xl font-semibold mb-2 text-slate-600">
-                Enter the code to join
-              </h1>
-              <p className="text-gray-600">
-                It’s on the screen in front of you
-              </p>
-            </div>
-            <div className="mb-8">
-              <input
-                className="text-center w-64 p-2 border-2 border-purple-600 rounded-lg shadow-sm focus:outline-none focus:border-purple-800"
-                placeholder="1234 5678"
-                style={{ fontSize: "1rem" }}
-                type="text"
-                onChange={(e) => {
-                  setCode(e.target.value);
-                }}
-              />
-              <br /> <br />
-              <input
-                className="text-center w-64 p-2 border-2 border-purple-600 rounded-lg shadow-sm focus:outline-none focus:border-purple-800"
-                placeholder="Your name"
-                style={{ fontSize: "1rem" }}
-                type="text"
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              />
-            </div>
-            <button
-              className="bg-purple-600 text-white w-64 py-2 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-800 focus:ring-opacity-50"
-              style={{ fontSize: "1rem" }}
-              onClick={() => {
-                setSubmitted(true);
-              }}
-            >
-              Join
-            </button>
-          </div>
-        </div>
+      <div className="flex flex-col gap-3 p-8 mx-auto max-w-sm">
+        <h1 className="text-2xl font-black">Enter the code to join</h1>
+        <Label>Enter Room Id</Label>
+        <Input
+          placeholder="1234 5678"
+          style={{ fontSize: "1rem" }}
+          type="text"
+          onChange={(e) => {
+            setCode(e.target.value);
+          }}
+        />
+        <Label>Enter Name</Label>
+        <Input
+          placeholder="Your name"
+          style={{ fontSize: "1rem" }}
+          type="text"
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
+        <Button
+          style={{ fontSize: "1rem" }}
+          onClick={() => {
+            console.log(code, name);
+            socket.emit("join", {
+              roomId: code,
+              name,
+            });
+            setSubmitted(true);
+          }}
+        >
+          Join
+        </Button>
       </div>
     );
   }
 
   return <UserLoggedin code={code} name={name} />;
-};
+}
 
-export const UserLoggedin = ({ name, code } : {
-    name: string;
-    code: string
+export const UserLoggedin = ({
+  name,
+  code,
+}: {
+  name: string;
+  code: string;
 }) => {
-  const [socket, setSocket] = useState<null | any>(null);
   const roomId = code;
   const [currentState, setCurrentState] = useState("not_started");
   const [currentQuestion, setCurrentQuestion] = useState<any>(null);
@@ -73,17 +69,6 @@ export const UserLoggedin = ({ name, code } : {
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
-    const socket = io("https://sum-server.100xdevs.com");
-    setSocket(socket);
-
-    socket.on("connect", () => {
-      console.log(socket.id);
-      socket.emit("join", {
-        roomId,
-        name,
-      });
-    });
-
     socket.on("init", ({ userId, state }) => {
       setUserId(userId);
 
@@ -127,11 +112,7 @@ export const UserLoggedin = ({ name, code } : {
   }
 
   if (currentState === "leaderboard") {
-    return (
-      <LeaderBoard
-        leaderboarddata={leaderboard}
-      />
-    );
+    return <LeaderBoard leaderboarddata={leaderboard} />;
   }
 
   return (

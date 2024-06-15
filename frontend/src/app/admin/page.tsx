@@ -14,7 +14,6 @@ export default function Admin() {
 
   useEffect(() => {
     socket.on("connect", () => {
-      console.log(socket.id);
       socket.emit("joinAdmin", {
         password: "admin123",
       });
@@ -24,16 +23,16 @@ export default function Admin() {
   if (!quizId) {
     return (
       <div className="flex flex-col gap-3 p-8 mx-auto max-w-sm">
-        <h2 className="text-2xl font-black">Login as admin</h2>
-        <Label htmlFor="password">Enter Password</Label>
+        <h2 className="text-2xl font-black">Create a Room</h2>
+        <Label htmlFor="room">Enter Room Id</Label>
         <Input
-        id="password"
+        id="room"
           type="text"
           onChange={(e) => {
             setRoomId(e.target.value);
           }}
           autoComplete="false"
-          placeholder="password"
+          placeholder="room-id"
         />
         <Button
           onClick={() => {

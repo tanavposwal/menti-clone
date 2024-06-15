@@ -3,15 +3,14 @@ import { IoManager } from "./IoManager";
 let globalProblemId = 0;
 
 export class QuizManager {
-  private quizes: Quiz[];
+  public quizes: Quiz[];
   constructor() {
     this.quizes = [];
   }
 
   // start a room
   start(roomId: string) {
-    const io = IoManager.getIo();
-    const quiz = this.quizes.find((x) => x.roomId === roomId);
+    const quiz = this.getQuiz(roomId);
     if (!quiz) {
       return;
     }

@@ -40,15 +40,9 @@ export const CreateProblem = ({
       <Label>Title</Label>
       <Input
         type="text"
+        value={title}
         onChange={(e) => {
           setTitle(e.target.value);
-        }}
-      />
-      <Label>Description</Label>
-      <Input
-        type="text"
-        onChange={(e) => {
-          setDescription(e.target.value);
         }}
       />
       <br />
@@ -64,6 +58,7 @@ export const CreateProblem = ({
           />
           <Input
             type="text"
+            value={options.find(x => x.id == optionId)?.title}
             onChange={(e) => {
               setOptions((options) =>
                 options.map((x) => {
@@ -93,6 +88,27 @@ export const CreateProblem = ({
               answer,
             },
           });
+          setOptions([
+            {
+              id: 0,
+              title: "",
+            },
+            {
+              id: 1,
+              title: "",
+            },
+            {
+              id: 2,
+              title: "",
+            },
+            {
+              id: 3,
+              title: "",
+            },
+          ]);
+          setDescription("")
+          setTitle("")
+          setAnswer(0)
         }}
       >
         Add problem

@@ -33,9 +33,9 @@ interface User {
 export class Quiz {
   public roomId: string;
   private hasStarted: boolean;
-  private problems: Problem[];
+  public problems: Problem[];
   private activeProblem: number;
-  private users: User[];
+  public users: User[];
   private currentState: "leaderboard" | "question" | "not_started" | "ended";
 
   constructor(roomId: string) {
@@ -65,22 +65,27 @@ export class Quiz {
     submission: 0 | 1 | 2 | 3
   ) {
     const problem = this.problems.find((x) => (x.id = problemId));
-    if (problem) {
-      const existindSubmission = problem.submissions.find(
-        (x) => (x.userId = userId)
-      );
+    const user = this.users.find((x) => x.id === userId);
 
-      if (existindSubmission) {
-        return;
-      }
-
-      problem.submissions.push({
-        problemId,
-        userId,
-        optionSelected: submission,
-        isCorrect: problem.answer == submission,
-      });
+    if (!problem || !user) {
+      console.log("problem or user not found");
+      return;
     }
+
+    const existingSubmission = problem.submissions.find(
+      (x) => (x.userId = userId)
+    );
+
+    if (existingSubmission) {
+      return;
+    }
+
+    problem.submissions.push({
+      problemId,
+      userId,
+      optionSelected: submission,
+      isCorrect: problem.answer == submission,
+    });
   }
 
   addProblem(problem: Problem) {
@@ -122,8 +127,8 @@ export class Quiz {
     if (problem) {
       this.setActiveProblem(problem);
     } else {
-      this.currentState = "ended"
-      io.emit("QUIZ_END", {
+      this.currentState = "ended";
+      io.to(this.roomId).emit("QUIZ_END", {
         leaderboard: this.getLeaderboard(),
       });
     }
