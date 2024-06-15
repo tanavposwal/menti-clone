@@ -1,6 +1,8 @@
 import { Socket } from "socket.io";
 import { QuizManager } from "./QuizManager";
 
+const ADMIN_PASSWORD = "admin123"
+
 export class UserManager {
   private quizManager;
 
@@ -19,6 +21,26 @@ export class UserManager {
         userId
       })
     });
+
+    socket.on("joinAdmin", (data) => {
+      if (data.password !== ADMIN_PASSWORD) {
+          return;
+      }
+      console.log("join admi called");
+      
+      socket.on("createQuiz", data => {
+          this.quizManager.addQuiz(data.roomId);
+      })
+  
+      socket.on("createProblem", data => {
+          this.quizManager.addProblem(data.roomId, data.problem);
+      });
+
+      socket.on("next", data => {
+          this.quizManager.next(data.roomId);
+      });
+  });
+
     socket.on("submit", (data) => {
       const userId = data.userId
       const problemId = data.problemId
