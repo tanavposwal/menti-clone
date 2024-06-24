@@ -1,55 +1,71 @@
 "use client";
 
-import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
+import RoomId from "./RoomId";
 
-/**
- Simple View with title and answers - $25
-    title : string
-    choices: strings[]
-    image?: string
- */
-
-export function Quiz({quizData, socket, userId, problemId, roomId}: {
-    quizData: {
-        title: string;
-        options: string[];
-    },
-    socket: any;
-    roomId: string;
-    userId: string;
-    problemId: string;
+export function Quiz({
+  quizData,
+  socket,
+  userId,
+  problemId,
+  roomId,
+  name,
+}: {
+  quizData: {
+    title: string;
+    options: {
+      id: number;
+      title: string;
+    }[];
+  };
+  socket: any;
+  roomId: string;
+  userId: string;
+  problemId: number;
+  name: string;
 }) {
   const [submitted, setSubmitted] = useState(false);
-  const [submission , setSubmission] = useState(0);
+  const [submission, setSubmission] = useState<any>(null);
+
+  useEffect(() => {
+    setSubmission(null)
+    setSubmitted(false)
+  }, [socket])
 
   return (
-    <div className="h-screen">
-      <div className="flex w-full justify-center">
-        <div className="">
-            <SingleQuiz
-                choices={quizData.options}
-                title={quizData.title}
-                imageURL={""}
-                setSelected={setSubmission}
-            />
-          <div className="flex justify-between w-full mt-4 text-white">
-            <button
-              className="py-3 px-10 bg-indigo-600 rounded-lg mx-8"
-              disabled={submitted}
-              onClick={() => {
-                setSubmitted(true);
-                socket.emit("submit", {
-                    userId,
-                    problemId,
-                    submission: Number(submission),
-                    roomId,
-                })
-              }}
-            >
-              Submit
-            </button>
-          </div>
-
+    <div className="h-screen max-w-md mx-auto py-8">
+      <div className="flex flex-col w-full justify-center">
+        <div className="flex justify-between items-center border-b pb-3">
+          <p className="text-lg font-bold">Name: {name}</p>
+          <p>
+            <RoomId roomId={roomId} />
+          </p>
+        </div>
+        <div className="mt-3">
+          <SingleQuiz
+            choices={quizData.options}
+            title={quizData.title}
+            imageURL={""}
+            selection={submission}
+            setSelected={setSubmission}
+            problemId={Number(problemId)}
+          />
+          <Button
+            disabled={submitted}
+            onClick={() => {
+              setSubmitted(true);
+              socket.emit("submit", {
+                userId,
+                problemId,
+                submission: Number(submission),
+                roomId,
+              });
+            }}
+          >
+            Submit
+          </Button>
         </div>
       </div>
     </div>
@@ -58,43 +74,42 @@ export function Quiz({quizData, socket, userId, problemId, roomId}: {
 
 type SingleQuizProps = {
   title: string;
-  choices: string[];
+  choices: {
+    id: number;
+    title: string;
+  }[];
   imageURL?: string;
   setSelected: any;
+  selection: number;
+  problemId: number;
 };
 function SingleQuiz({
   title,
   choices,
   imageURL,
-  setSelected
+  setSelected,
+  selection,
+  problemId,
 }: SingleQuizProps) {
   return (
     <article>
-      <h4 className="mt-10 text-xl">
-        Question 
-      </h4>
-      <div className="mt-4 text-2x">{title}</div>
+      <Label className="mt-10">Q {problemId + 1}</Label>
+      <div className="text-3xl font-semibold">{title}</div>
       {imageURL && <img src={imageURL} alt="" />}
-      {choices.length &&
-        choices.map((choice, index) => {
-          return (
-            <div
-              key={index}
-              className="flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer border-white/10 rounded-xl bg-white/5"
-            >
-              <input
-                type="radio"
-                name="option"
-                value={choice}
-                className="w-6 h-6 bg-black"
-                onClick={() => {
-                    setSelected(index)
-                }}
-              />
-              <p className="ml-6 ">{choice}</p>
-            </div>
-          );
-        })}
+      <div className="grid grid-cols-2 grid-rows-2 gap-2 my-5">
+        {choices.map((choice) => (
+          <div
+            className={
+              "border-2 rounded-md shadow-sm transition-colors px-5 py-4 select-none hover:border-neutral-300 cursor-pointer " +
+              (selection == choice.id ? "bg-green-600 text-white" : "")
+            }
+            key={choice.id}
+            onClick={() => setSelected(choice.id)}
+          >
+            <p className="text-lg font-semibold">{choice.title}</p>
+          </div>
+        ))}
+      </div>
       <div className="flex flex-col items-start w-full"></div>
     </article>
   );

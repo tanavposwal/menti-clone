@@ -45,11 +45,12 @@ export class Quiz {
     this.activeProblem = 0;
     this.users = [];
     this.currentState = "not_started";
-    console.log(">Room created");
+    console.log(">> Room created");
   }
 
   addUser(name: string) {
     const id = randomstring.generate(7);
+    console.log("id> ", id)
     this.users.push({
       name,
       id,
@@ -131,6 +132,14 @@ export class Quiz {
       io.to(this.roomId).emit("QUIZ_END", {
         leaderboard: this.getLeaderboard(),
       });
+    }
+  }
+
+  previous() {
+    this.activeProblem--;
+    const problem = this.problems[this.activeProblem];
+    if (problem) {
+      this.setActiveProblem(problem);
     }
   }
 

@@ -7,26 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-
 export default function Admin() {
-  const [quizId, setQuizId] = useState("");
+  const [loged, setLoged] = useState(false);
   const [roomId, setRoomId] = useState("");
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      socket.emit("joinAdmin", {
-        password: "admin123",
-      });
-    });
-  });
-
-  if (!quizId) {
+  if (!loged) {
     return (
       <div className="flex flex-col gap-3 p-8 mx-auto max-w-sm">
         <h2 className="text-2xl font-black">Create a Room</h2>
+
         <Label htmlFor="room">Enter Room Id</Label>
         <Input
-        id="room"
+          id="room"
           type="text"
           onChange={(e) => {
             setRoomId(e.target.value);
@@ -36,10 +28,14 @@ export default function Admin() {
         />
         <Button
           onClick={() => {
+            socket.emit("joinAdmin", {
+              password: "admin123",
+            });
             socket.emit("createQuiz", {
               roomId,
             });
-            setQuizId(roomId);
+            setLoged(true);
+            console.log("create quiz called", roomId, socket);
           }}
         >
           Create room
@@ -50,7 +46,7 @@ export default function Admin() {
 
   return (
     <div>
-      <CreateProblem roomId={quizId} socket={socket} />
+      <CreateProblem roomId={roomId} socket={socket} />
       <QuizControls socket={socket} roomId={roomId} />
     </div>
   );

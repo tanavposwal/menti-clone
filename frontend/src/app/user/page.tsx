@@ -7,6 +7,7 @@ import { socket } from "@/socket";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import RoomId from "../components/RoomId";
 
 export default function User() {
   const [name, setName] = useState("");
@@ -94,16 +95,25 @@ export const UserLoggedin = ({
   }, []);
 
   if (currentState === "not_started") {
-    return <div>This quiz hasnt started yet</div>;
+    return (
+      <section className="w-full h-screen flex items-center justify-center">
+        <div className="w-lg-screen flex flex-col h-fit items-center gap-5">
+          <h1 className="text-3xl font-black">Quiz has not started</h1>
+          <h3 className="text-xl font-bold text-muted-foreground">"{name}"</h3>
+          <RoomId roomId={roomId} />
+        </div>
+      </section>
+    );
   }
   if (currentState === "question") {
     return (
       <Quiz
         roomId={roomId}
         userId={userId}
+        name={name}
         problemId={currentQuestion.id}
         quizData={{
-          title: currentQuestion.description,
+          title: currentQuestion.title,
           options: currentQuestion.options,
         }}
         socket={socket}
@@ -115,11 +125,15 @@ export const UserLoggedin = ({
     return <LeaderBoard leaderboarddata={leaderboard} />;
   }
 
-  return (
-    <div>
-      <br />
-      Quiz has ended
-      {currentState}
-    </div>
-  );
+  if (currentState === "ended") {
+    return (
+      <section className="w-full h-screen flex items-center justify-center">
+        <div className="w-lg-screen flex flex-col h-fit items-center gap-5">
+          <h1 className="text-3xl font-black">Quiz has ended</h1>
+          <h3 className="text-xl font-bold text-muted-foreground">"{name}"</h3>
+          <RoomId roomId={roomId} />
+        </div>
+      </section>
+    );
+  }
 };

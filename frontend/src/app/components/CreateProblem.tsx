@@ -48,7 +48,7 @@ export const CreateProblem = ({
       <br />
 
       {[0, 1, 2, 3].map((optionId) => (
-        <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="flex items-center justify-center gap-2 mb-2" key={optionId}>
           <Checkbox
             checked={optionId === answer}
             onCheckedChange={() => {

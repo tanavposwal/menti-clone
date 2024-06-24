@@ -1,5 +1,5 @@
 import { Quiz } from "../Quiz";
-import { IoManager } from "./IoManager";
+
 let globalProblemId = 0;
 
 export class QuizManager {
@@ -34,11 +34,28 @@ export class QuizManager {
     if (!quiz) {
       return;
     }
+    if (
+      !problem.title &&
+      !problem.options[0].title &&
+      !problem.options[1].title &&
+      !problem.options[2].title &&
+      !problem.options[3].title
+    ) {
+      return;
+    }
     quiz.addProblem({
       ...problem,
       id: (globalProblemId++).toString(),
       submissions: [],
     });
+  }
+
+  sendLeaderboard(roomId: string) {
+    const quiz = this.getQuiz(roomId);
+    if (!quiz) {
+      return;
+    }
+    quiz.sendLeaderboard();
   }
 
   next(roomId: string) {
@@ -49,7 +66,17 @@ export class QuizManager {
     quiz.next();
   }
 
+  previous(roomId: string) {
+    const quiz = this.getQuiz(roomId);
+    if (!quiz) {
+      return;
+    }
+    quiz.previous();
+  }
+
   addUser(roomId: string, name: string) {
+    console.log(roomId, name);
+    // todo debug
     return this.getQuiz(roomId)?.addUser(name);
   }
 
@@ -75,10 +102,13 @@ export class QuizManager {
   }
 
   addQuiz(roomId: string) {
+    console.log("add quiz call ", roomId)
     if (this.getQuiz(roomId)) {
+      console.log("already room ", roomId)
       return;
     }
     const quiz = new Quiz(roomId);
     this.quizes.push(quiz);
+    console.log("new room ", roomId)
   }
 }

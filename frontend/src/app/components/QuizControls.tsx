@@ -8,10 +8,22 @@ export const QuizControls = ({
   roomId: string;
 }) => {
   return (
-    <div>
+    <div className="flex gap-2 p-3">
       <Button
+        variant="outline"
+        size="sm"
         onClick={() => {
-          socket.emit("next", {
+          socket.emit("previous", {
+            roomId,
+          });
+        }}
+      >
+        Previous Problem
+      </Button>
+      <Button
+        size="sm"
+        onClick={() => {
+          socket.emit("start", {
             roomId,
           });
         }}
@@ -19,13 +31,26 @@ export const QuizControls = ({
         Start Quiz
       </Button>
       <Button
+        size="sm"
+        variant="outline"
         onClick={() => {
-          socket.emit("start", {
+          socket.emit("next", {
             roomId,
           });
         }}
       >
         Next problem
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={() => {
+          socket.emit("sendLeaderboard", {
+            roomId,
+          });
+        }}
+      >
+        Show Leaderboard
       </Button>
     </div>
   );
