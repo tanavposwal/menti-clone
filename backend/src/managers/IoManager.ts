@@ -8,7 +8,7 @@ export class IoManager {
     private static io: Server;
 
     // singletons
-    public static getIo() {
+    public static getIo() {
         if (!this.io) {
             const io = new Server(server, {
                 cors: {

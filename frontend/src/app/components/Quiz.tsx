@@ -12,6 +12,7 @@ export function Quiz({
   problemId,
   roomId,
   name,
+  imageURL,
 }: {
   quizData: {
     title: string;
@@ -22,6 +23,7 @@ export function Quiz({
   };
   socket: any;
   roomId: string;
+  imageURL: string;
   userId: string;
   problemId: number;
   name: string;
@@ -30,15 +32,15 @@ export function Quiz({
   const [submission, setSubmission] = useState<any>(null);
 
   useEffect(() => {
-    setSubmission(null)
-    setSubmitted(false)
-  }, [socket])
+    setSubmission(null);
+    setSubmitted(false);
+  }, [socket]);
 
   return (
     <div className="h-screen max-w-md mx-auto py-8">
       <div className="flex flex-col w-full justify-center">
         <div className="flex justify-between items-center border-b pb-3">
-          <p className="text-lg font-bold">Name: {name}</p>
+          <p className="text-2xl font-semibold capitalize">{name}</p>
           <p>
             <RoomId roomId={roomId} />
           </p>
@@ -47,7 +49,7 @@ export function Quiz({
           <SingleQuiz
             choices={quizData.options}
             title={quizData.title}
-            imageURL={""}
+            imageURL={imageURL}
             selection={submission}
             setSelected={setSubmission}
             problemId={Number(problemId)}
@@ -83,6 +85,7 @@ type SingleQuizProps = {
   selection: number;
   problemId: number;
 };
+
 function SingleQuiz({
   title,
   choices,
@@ -93,14 +96,14 @@ function SingleQuiz({
 }: SingleQuizProps) {
   return (
     <article>
-      <Label className="mt-10">Q {problemId + 1}</Label>
-      <div className="text-3xl font-semibold">{title}</div>
-      {imageURL && <img src={imageURL} alt="" />}
-      <div className="grid grid-cols-2 grid-rows-2 gap-2 my-5">
+      <Label className="mt-10 opacity-70">Q{problemId + 1}</Label>
+      <div className="text-3xl font-black">{title}</div>
+      {imageURL && <img src={imageURL} alt="" className="border rounded-lg mt-6 max-w-full" />}
+      <div className="flex flex-col gap-2 my-5">
         {choices.map((choice) => (
           <div
             className={
-              "border-2 rounded-md shadow-sm transition-colors px-5 py-4 select-none hover:border-neutral-300 cursor-pointer " +
+              "border rounded-md shadow-sm transition-colors px-4 py-2 select-none hover:border-neutral-300 cursor-pointer " +
               (selection == choice.id ? "bg-green-600 text-white" : "")
             }
             key={choice.id}

@@ -14,6 +14,7 @@ export const CreateProblem = ({
   roomId: string;
 }) => {
   const [title, setTitle] = useState("");
+  const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [answer, setAnswer] = useState(0);
   const [options, setOptions] = useState([
@@ -36,13 +37,22 @@ export const CreateProblem = ({
   ]);
 
   return (
-    <div className="max-w-md mx-auto py-8">
-      <Label>Title</Label>
+    <div className="w-96 py-8">
+      <h2 className="text-3xl font-black mb-6">Add Problem</h2>
+      <Label className="font-bold">Question</Label>
       <Input
         type="text"
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
+        }}
+      />
+      <Label className="font-bold">Image URL</Label>
+      <Input
+        type="text"
+        value={image}
+        onChange={(e) => {
+          setImage(e.target.value);
         }}
       />
       <br />
@@ -83,6 +93,7 @@ export const CreateProblem = ({
             roomId,
             problem: {
               title,
+              image,
               description,
               options,
               answer,

@@ -14,9 +14,9 @@ export default function Admin() {
   if (!loged) {
     return (
       <div className="flex flex-col gap-3 p-8 mx-auto max-w-sm">
-        <h2 className="text-2xl font-black">Create a Room</h2>
+        <h2 className="text-3xl font-black mb-6">Create a Room</h2>
 
-        <Label htmlFor="room">Enter Room Id</Label>
+        <Label className="font-bold" htmlFor="room">Enter Room Id</Label>
         <Input
           id="room"
           type="text"
@@ -45,9 +45,13 @@ export default function Admin() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
+      <div>
       <CreateProblem roomId={roomId} socket={socket} />
+      </div>
+      <div>
       <QuizControls socket={socket} roomId={roomId} />
+      </div>
     </div>
   );
 }
