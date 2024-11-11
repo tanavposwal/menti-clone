@@ -108,6 +108,7 @@ export class Quiz {
   }
 
   getLeaderboard() {
+    // issue
     return this.users
       .sort((a, b) => (a.points < b.points ? 1 : -1))
       .slice(0, 10);

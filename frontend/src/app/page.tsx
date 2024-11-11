@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { Quiz } from "./components/Quiz";
 import { LeaderBoard } from "./components/LeaderBoard";
-import RoomId from "./components/RoomId";
 import { socket } from "@/socket";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function Home() {
   const [name, setName] = useState("");
@@ -34,8 +34,9 @@ export default function Home() {
             setName(e.target.value);
           }}
         />
+        <div className="flex items-center w-full justify-center">
         <Button
-        className="mt-3"
+        className="mt-3 rounded-full text-lg py-6 px-10 w-fit"
           onClick={() => {
             socket.emit("join", {
               roomId: code,
@@ -44,8 +45,9 @@ export default function Home() {
             setLog(true);
           }}
         >
-          Join
+          Join Quiz
         </Button>
+        </div>
       </div>
     );
   }
@@ -102,9 +104,9 @@ export const UserLoggedin = ({
     return (
       <section className="w-full h-screen flex items-center justify-center">
         <div className="w-lg-screen flex flex-col h-fit items-center gap-5">
-          <h2 className="text-3xl font-black">Quiz has not started</h2>
-          <h3 className="text-xl font-bold text-muted-foreground">"{name}"</h3>
-          <RoomId roomId={roomId} />
+          <h2 className="text-4xl font-bold">Get ready to play {name}!</h2>
+          <h3 className="text-muted-foreground">admin will start the quiz soon</h3>
+          <Image src="/loading-gif.gif" alt="loading" width={500} height={500} className="w-8 select-none" draggable="false" />
         </div>
       </section>
     );
@@ -134,8 +136,9 @@ export const UserLoggedin = ({
     return (
       <section className="w-full h-screen flex items-center justify-center">
         <div className="w-lg-screen flex flex-col h-fit items-center gap-5">
-          <h1 className="text-3xl font-black">Quiz has ended</h1>
-          <LeaderBoard leaderboarddata={leaderboard} />
+          <h1 className="text-4xl font-bold">Lets see how you did!</h1>
+          <h3 className="text-muted-foreground">admin can see your leaderboard now</h3>
+          <Image src="/loading-gif.gif" alt="loading" width={500} height={500} className="w-8 select-none" draggable="false" />
         </div>
       </section>
     );

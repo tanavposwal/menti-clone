@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import RoomId from "./RoomId";
 
 export function Quiz({
@@ -36,12 +36,6 @@ export function Quiz({
   return (
     <div className="h-screen max-w-md mx-auto py-8">
       <div className="flex flex-col w-full justify-center">
-        <div className="flex justify-between items-center border-b pb-3">
-          <p className="text-2xl font-bold capitalize">{name}</p>
-          <p>
-            <RoomId roomId={roomId} />
-          </p>
-        </div>
         <div className="mt-3">
           <SingleQuiz
             choices={quizData.options}
@@ -100,13 +94,13 @@ function SingleQuiz({
   return (
     <article>
       <Label className="mt-10 opacity-70">Q{problemId + 1}</Label>
-      <div className="text-3xl font-black">{title}</div>
+      <div className="text-4xl font-extrabold">{title}</div>
       {imageURL && <img src={imageURL} alt="" className="border rounded-lg mt-6 max-w-full" />}
       <div className="flex flex-col gap-2 my-5">
         {choices.map((choice) => (
           <div
             className={
-              "border rounded-md shadow-sm transition-colors px-4 py-2 select-none hover:border-neutral-300 cursor-pointer " +
+              "border rounded-lg transition-colors px-6 py-3 select-none hover:border-neutral-300 cursor-pointer " +
               (selection == choice.id ? "bg-green-600 text-white" : "")
             }
             key={choice.id}
