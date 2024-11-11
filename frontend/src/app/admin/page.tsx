@@ -28,14 +28,13 @@ export default function Admin() {
         />
         <Button
           onClick={() => {
-            socket.emit("joinAdmin", {
+            socket.emit("joinAdmin", { // add authentication here
               password: "admin123",
             });
             socket.emit("createQuiz", {
               roomId,
             });
             setLoged(true);
-            console.log("create quiz called", roomId, socket);
           }}
         >
           Create room

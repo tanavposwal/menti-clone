@@ -15,18 +15,19 @@ export default async function RootLayout({
 
     const session = await auth();
 
-    if (session) {return children;
-}
-    else {
-        return (
-            <div className="w-full h-screen flex flex-col items-center justify-center gap-2">
-                <h1 className="text-6xl font-black">M3nti</h1>
-                <h1 className="text-3xl font-black">Login to make quizes</h1>
-                <p>click below to login</p>
-                <SignIn />
-            </div>
-        )
-    }
+    // if (session) {
+      return children;
+// }
+//     else {
+//         return (
+//             <div className="w-full h-screen flex flex-col items-center justify-center gap-2">
+//                 <h1 className="text-6xl font-black">M3nti</h1>
+//                 <h1 className="text-3xl font-black">Login to make quizes</h1>
+//                 <p>click below to login</p>
+//                 <SignIn />
+//             </div>
+//         )
+//     }
 }
 
 function SignIn() {

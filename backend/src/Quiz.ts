@@ -7,7 +7,6 @@ const io = IoManager.getIo();
 interface Problem {
   id: string;
   title: string;
-  description: string;
   image?: string;
   answer: 0 | 1 | 2 | 3;
   options: {
@@ -45,12 +44,11 @@ export class Quiz {
     this.activeProblem = 0;
     this.users = [];
     this.currentState = "not_started";
-    console.log(">> Room created");
+    // room created
   }
 
   addUser(name: string) {
     const id = randomstring.generate(7);
-    console.log("id> ", id)
     this.users.push({
       name,
       id,
@@ -61,26 +59,20 @@ export class Quiz {
 
   submit(
     userId: string,
-    roomId: string,
     problemId: string,
     submission: 0 | 1 | 2 | 3
   ) {
     const problem = this.problems.find((x) => (x.id = problemId));
     const user = this.users.find((x) => x.id === userId);
-
-    if (!problem || !user) {
-      console.log("problem or user not found");
-      return;
-    }
-
+    if (!problem || !user) return; // error handling
     const existingSubmission = problem.submissions.find(
-      (x) => (x.userId = userId)
+      (x) => (x.userId == userId)
     );
-
-    if (existingSubmission) {
-      return;
+    if (existingSubmission) return;
+    // increase points
+    if (problem.answer == submission) {
+      user.points += 1
     }
-
     problem.submissions.push({
       problemId,
       userId,
@@ -91,11 +83,11 @@ export class Quiz {
 
   addProblem(problem: Problem) {
     this.problems.push(problem);
-    console.log(">> problem added", problem);
   }
 
   start() {
     this.hasStarted = true;
+    if (this.hasStarted) this.currentState = "not_started";
     this.setActiveProblem(this.problems[0]);
   }
 
@@ -108,7 +100,6 @@ export class Quiz {
   }
 
   sendLeaderboard() {
-    console.log("send leaderboard");
     this.currentState = "leaderboard";
     const leaderboard = this.getLeaderboard();
     io.to(this.roomId).emit("leaderboard", {
@@ -119,7 +110,7 @@ export class Quiz {
   getLeaderboard() {
     return this.users
       .sort((a, b) => (a.points < b.points ? 1 : -1))
-      .slice(0, 20);
+      .slice(0, 10);
   }
 
   next() {
@@ -129,7 +120,7 @@ export class Quiz {
       this.setActiveProblem(problem);
     } else {
       this.currentState = "ended";
-      io.to(this.roomId).emit("QUIZ_END", {
+      io.to(this.roomId).emit("ended", {
         leaderboard: this.getLeaderboard(),
       });
     }

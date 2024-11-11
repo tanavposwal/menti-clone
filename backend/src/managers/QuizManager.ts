@@ -21,7 +21,6 @@ export class QuizManager {
     roomId: string,
     problem: {
       title: string;
-      description: string;
       image?: string;
       options: {
         id: number;
@@ -75,7 +74,6 @@ export class QuizManager {
   }
 
   addUser(roomId: string, name: string) {
-    console.log(roomId, name);
     // todo debug
     return this.getQuiz(roomId)?.addUser(name);
   }
@@ -86,7 +84,7 @@ export class QuizManager {
     problemId: string,
     submission: 0 | 1 | 2 | 3
   ) {
-    this.getQuiz(roomId)?.submit(userId, roomId, problemId, submission);
+    this.getQuiz(roomId)?.submit(userId, problemId, submission);
   }
 
   getQuiz(roomId: string) {
@@ -102,13 +100,10 @@ export class QuizManager {
   }
 
   addQuiz(roomId: string) {
-    console.log("add quiz call ", roomId)
     if (this.getQuiz(roomId)) {
-      console.log("already room ", roomId)
       return;
     }
     const quiz = new Quiz(roomId);
     this.quizes.push(quiz);
-    console.log("new room ", roomId)
   }
 }

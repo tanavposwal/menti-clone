@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import RoomId from "./RoomId";
 
 export function Quiz({
@@ -11,11 +11,11 @@ export function Quiz({
   userId,
   problemId,
   roomId,
-  name,
-  imageURL,
+  name
 }: {
   quizData: {
     title: string;
+    imageURL: string;
     options: {
       id: number;
       title: string;
@@ -23,24 +23,21 @@ export function Quiz({
   };
   socket: any;
   roomId: string;
-  imageURL: string;
   userId: string;
   problemId: number;
   name: string;
 }) {
-  const [submitted, setSubmitted] = useState(false);
-  const [submission, setSubmission] = useState<any>(null);
+  const [submission, setSubmission] = useState<0 | 1 | 2 | 3 | null>(null);
 
   useEffect(() => {
     setSubmission(null);
-    setSubmitted(false);
   }, [socket]);
 
   return (
     <div className="h-screen max-w-md mx-auto py-8">
       <div className="flex flex-col w-full justify-center">
         <div className="flex justify-between items-center border-b pb-3">
-          <p className="text-2xl font-semibold capitalize">{name}</p>
+          <p className="text-2xl font-bold capitalize">{name}</p>
           <p>
             <RoomId roomId={roomId} />
           </p>
@@ -49,15 +46,14 @@ export function Quiz({
           <SingleQuiz
             choices={quizData.options}
             title={quizData.title}
-            imageURL={imageURL}
+            socket={socket}
+            imageURL={quizData.imageURL}
             selection={submission}
             setSelected={setSubmission}
             problemId={Number(problemId)}
           />
           <Button
-            disabled={submitted}
             onClick={() => {
-              setSubmitted(true);
               socket.emit("submit", {
                 userId,
                 problemId,
@@ -80,9 +76,10 @@ type SingleQuizProps = {
     id: number;
     title: string;
   }[];
+  socket: any;
   imageURL?: string;
   setSelected: any;
-  selection: number;
+  selection: 0 | 1 | 2 | 3 | null;
   problemId: number;
 };
 
@@ -90,10 +87,16 @@ function SingleQuiz({
   title,
   choices,
   imageURL,
+  socket,
   setSelected,
   selection,
   problemId,
 }: SingleQuizProps) {
+
+  useEffect(() => {
+    setSelected(null);
+  }, [socket]);
+
   return (
     <article>
       <Label className="mt-10 opacity-70">Q{problemId + 1}</Label>

@@ -19,6 +19,7 @@ export class UserManager {
       if (data.password !== ADMIN_PASSWORD) {
         return;
       }
+
       socket.on("createQuiz", (data) => {
         this.quizManager.addQuiz(data.roomId);
       });
@@ -47,7 +48,6 @@ export class UserManager {
     // simple user
     socket.on("join", (data) => {
       const userId = this.quizManager.addUser(data.roomId, data.name);
-      console.log(userId, "user logged");
       socket.emit("init", {
         userId,
         state: this.quizManager.getCurrentState(data.roomId),
@@ -55,15 +55,9 @@ export class UserManager {
       socket.join(data.roomId);
     });
 
-    socket.on("submit", (data) => {
-      const userId = data.userId;
-      const problemId = data.problemId;
-      const submission = Number(data.submission) as 0 | 1 | 2 | 3;
-      console.log(submission);
-      const roomId = data.roomId;
+    socket.on("submit", ({userId, problemId, submission, roomId}: {userId: string; problemId: string; submission: 0|1|2|3; roomId: string}) => {
 
       if (submission > 3) {
-        console.error("issue while getting input", submission);
         return;
       }
 

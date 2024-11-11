@@ -11,10 +11,10 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [name, setName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [log, setLog] = useState(false);
   const [code, setCode] = useState("");
 
-  if (!submitted) {
+  if (!log) {
     return (
       <div className="flex flex-col gap-3 p-8 mx-auto max-w-sm">
         <h2 className="text-3xl font-black mb-6">Enter the code to join</h2>
@@ -37,12 +37,11 @@ export default function Home() {
         <Button
         className="mt-3"
           onClick={() => {
-            console.log(code, name);
             socket.emit("join", {
               roomId: code,
               name,
             });
-            setSubmitted(true);
+            setLog(true);
           }}
         >
           Join
@@ -54,6 +53,7 @@ export default function Home() {
   return <UserLoggedin code={code} name={name} />;
 }
 
+// now the room after login
 export const UserLoggedin = ({
   name,
   code,
@@ -71,13 +71,9 @@ export const UserLoggedin = ({
     socket.on("init", ({ userId, state }) => {
       setUserId(userId);
 
-      if (state.leaderboard) {
-        setLeaderboard(state.leaderboard);
-      }
+      if (state.leaderboard) setLeaderboard(state.leaderboard);
 
-      if (state.problem) {
-        setCurrentQuestion(state.problem);
-      }
+      if (state.problem) setCurrentQuestion(state.problem);
 
       setCurrentState(state.type);
     });
@@ -86,6 +82,16 @@ export const UserLoggedin = ({
       setCurrentState("leaderboard");
       setLeaderboard(data.leaderboard);
     });
+    
+    socket.on("ended", (data) => {
+      setCurrentState("ended");
+      setLeaderboard(data.leaderboard);
+    }); // add to ui
+    
+    socket.on("not_started", (data) => {
+      setCurrentState("not_started");
+    });
+    
     socket.on("problem", (data) => {
       setCurrentState("question");
       setCurrentQuestion(data.problem);
@@ -110,8 +116,8 @@ export const UserLoggedin = ({
         userId={userId}
         name={name}
         problemId={currentQuestion.id}
-        imageURL={currentQuestion.image}
         quizData={{
+          imageURL:currentQuestion.image,
           title: currentQuestion.title,
           options: currentQuestion.options,
         }}
@@ -129,8 +135,7 @@ export const UserLoggedin = ({
       <section className="w-full h-screen flex items-center justify-center">
         <div className="w-lg-screen flex flex-col h-fit items-center gap-5">
           <h1 className="text-3xl font-black">Quiz has ended</h1>
-          <h3 className="text-xl font-bold text-muted-foreground">"{name}"</h3>
-          <RoomId roomId={roomId} />
+          <LeaderBoard leaderboarddata={leaderboard} />
         </div>
       </section>
     );
