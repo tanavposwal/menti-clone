@@ -1,6 +1,5 @@
 import { Socket } from "socket.io";
 import { QuizManager } from "./QuizManager";
-
 const ADMIN_PASSWORD = "admin123";
 
 export class UserManager {
@@ -31,7 +30,7 @@ export class UserManager {
       socket.on("next", (data) => {
         this.quizManager.next(data.roomId);
       });
-      
+
       socket.on("previous", (data) => {
         this.quizManager.previous(data.roomId);
       });
@@ -55,13 +54,25 @@ export class UserManager {
       socket.join(data.roomId);
     });
 
-    socket.on("submit", ({userId, problemId, submission, roomId}: {userId: string; problemId: string; submission: 0|1|2|3; roomId: string}) => {
+    socket.on(
+      "submit",
+      ({
+        userId,
+        problemId,
+        submission,
+        roomId,
+      }: {
+        userId: string;
+        problemId: string;
+        submission: 0 | 1 | 2 | 3;
+        roomId: string;
+      }) => {
+        if (submission > 3) {
+          return;
+        }
 
-      if (submission > 3) {
-        return;
+        this.quizManager.submit(userId, roomId, problemId, submission);
       }
-
-      this.quizManager.submit(userId, roomId, problemId, submission);
-    });
+    );
   }
 }

@@ -36,14 +36,14 @@ export default function Home() {
         />
         <div className="flex items-center w-full justify-center">
         <Button
-        className="mt-3 rounded-full text-lg py-6 px-10 w-fit"
-          onClick={() => {
-            socket.emit("join", {
-              roomId: code,
-              name,
-            });
-            setLog(true);
-          }}
+        className="mt-3 w-full"
+        onClick={() => {
+          socket.emit("join", {
+            roomId: code,
+            name,
+          });
+          setLog(true);
+        }}
         >
           Join Quiz
         </Button>
@@ -105,7 +105,7 @@ export const UserLoggedin = ({
       <section className="w-full h-screen flex items-center justify-center">
         <div className="w-lg-screen flex flex-col h-fit items-center gap-5">
           <h2 className="text-4xl font-bold">Get ready to play {name}!</h2>
-          <h3 className="text-muted-foreground">admin will start the quiz soon</h3>
+          <h3 className="text-muted-foreground">answer fast to score more points, admin will start the quiz soon</h3>
           <Image src="/loading-gif.gif" alt="loading" width={500} height={500} className="w-8 select-none" draggable="false" />
         </div>
       </section>

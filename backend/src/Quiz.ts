@@ -2,6 +2,7 @@ import { IoManager } from "./managers/IoManager";
 import randomstring from "randomstring";
 
 const io = IoManager.getIo();
+const PER_PROBLEM_TIME = 10; // second
 
 // this should be on database
 interface Problem {
@@ -13,6 +14,7 @@ interface Problem {
     id: number;
     title: string;
   }[];
+  startTime: Date;
   submissions: Submission[];
 }
 
@@ -65,13 +67,14 @@ export class Quiz {
     const problem = this.problems.find((x) => (x.id = problemId));
     const user = this.users.find((x) => x.id === userId);
     if (!problem || !user) return; // error handling
+
     const existingSubmission = problem.submissions.find(
-      (x) => (x.userId == userId)
+      (x) => (x.userId === userId)
     );
     if (existingSubmission) return;
     // increase points
     if (problem.answer == submission) {
-      user.points += 1
+      user.points += (1000 - (500 * (new Date().getTime() - problem.startTime.getTime()) / (PER_PROBLEM_TIME * 1000)));
     }
     problem.submissions.push({
       problemId,
@@ -93,6 +96,7 @@ export class Quiz {
 
   setActiveProblem(problem: Problem) {
     this.currentState = "question";
+    problem.startTime = new Date();
     problem.submissions = [];
     io.to(this.roomId).emit("problem", {
       problem,

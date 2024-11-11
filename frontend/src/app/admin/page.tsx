@@ -27,6 +27,7 @@ export default function Admin() {
           placeholder="room-id"
         />
         <Button
+          className="mt-3"
           onClick={() => {
             socket.emit("joinAdmin", { // add authentication here
               password: "admin123",

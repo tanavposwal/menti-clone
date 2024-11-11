@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import RoomId from "./RoomId";
+import Timer from "./Timer";
 
 export function Quiz({
   quizData,
@@ -93,7 +94,10 @@ function SingleQuiz({
 
   return (
     <article>
+      <div>
       <Label className="mt-10 opacity-70">Q{problemId + 1}</Label>
+      <Timer />
+      </div>
       <div className="text-4xl font-extrabold">{title}</div>
       {imageURL && <img src={imageURL} alt="" className="border rounded-lg mt-6 max-w-full" />}
       <div className="flex flex-col gap-2 my-5">

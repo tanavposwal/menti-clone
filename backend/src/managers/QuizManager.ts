@@ -45,6 +45,7 @@ export class QuizManager {
     quiz.addProblem({
       ...problem,
       id: (globalProblemId++).toString(),
+      startTime: new Date(),
       submissions: [],
     });
   }
