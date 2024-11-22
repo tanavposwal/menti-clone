@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function Home() {
-  const [name, setName] = useState("");
+  const [name, setName] = useState("test bot");
   const [log, setLog] = useState(false);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState("123");
 
   if (!log) {
     return (
@@ -22,6 +22,7 @@ export default function Home() {
         <Input
           placeholder="1234 5678"
           type="text"
+          autoComplete="false"
           onChange={(e) => {
             setCode(e.target.value);
           }}
@@ -30,6 +31,7 @@ export default function Home() {
         <Input
           placeholder="Your name"
           type="text"
+          autoComplete="false"
           onChange={(e) => {
             setName(e.target.value);
           }}

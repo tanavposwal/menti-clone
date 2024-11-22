@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 
 export default function Admin() {
   const [loged, setLoged] = useState(false);
-  const [roomId, setRoomId] = useState("");
+  const [roomId, setRoomId] = useState("123");
 
   if (!loged) {
     return (
@@ -18,13 +18,13 @@ export default function Admin() {
 
         <Label className="font-bold" htmlFor="room">Enter Room Id</Label>
         <Input
-          id="room"
           type="text"
           onChange={(e) => {
             setRoomId(e.target.value);
           }}
           autoComplete="false"
-          placeholder="room-id"
+          placeholder="1234 5678"
+          value={123}
         />
         <Button
           className="mt-3"

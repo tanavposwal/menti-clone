@@ -9,12 +9,12 @@ export class QuizManager {
   }
 
   // start a room
-  start(roomId: string) {
+  controls(roomId: string, options: string) {
     const quiz = this.getQuiz(roomId);
     if (!quiz) {
       return;
     }
-    quiz.start();
+    quiz.controls(options);
   }
 
   addProblem(
@@ -58,20 +58,12 @@ export class QuizManager {
     quiz.sendLeaderboard();
   }
 
-  next(roomId: string) {
+  sendData(roomId: string) {
     const quiz = this.getQuiz(roomId);
     if (!quiz) {
       return;
     }
-    quiz.next();
-  }
-
-  previous(roomId: string) {
-    const quiz = this.getQuiz(roomId);
-    if (!quiz) {
-      return;
-    }
-    quiz.previous();
+    quiz.sendData();
   }
 
   addUser(roomId: string, name: string) {

@@ -27,21 +27,17 @@ export class UserManager {
         this.quizManager.addProblem(data.roomId, data.problem);
       });
 
-      socket.on("next", (data) => {
-        this.quizManager.next(data.roomId);
-      });
-
-      socket.on("previous", (data) => {
-        this.quizManager.previous(data.roomId);
-      });
-
-      socket.on("start", (data) => {
-        this.quizManager.start(data.roomId);
-      });
+      socket.on("controls", (data) => {
+        this.quizManager.controls(data.roomId, data.options);
+      })
 
       socket.on("sendLeaderboard", (data) => {
         this.quizManager.sendLeaderboard(data.roomId);
       });
+
+      socket.on("sendData", (data) => {
+        this.quizManager.sendData(data.roomId);
+      })
     });
 
     // simple user

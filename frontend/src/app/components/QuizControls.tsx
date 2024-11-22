@@ -13,8 +13,9 @@ export const QuizControls = ({
         variant="outline"
         size="sm"
         onClick={() => {
-          socket.emit("previous", {
+          socket.emit("controls", {
             roomId,
+            options: "previous"
           });
         }}
       >
@@ -23,8 +24,9 @@ export const QuizControls = ({
       <Button
         size="sm"
         onClick={() => {
-          socket.emit("start", {
+          socket.emit("controls", {
             roomId,
+            options: "togglePlay"
           });
         }}
       >
@@ -34,8 +36,9 @@ export const QuizControls = ({
         size="sm"
         variant="outline"
         onClick={() => {
-          socket.emit("next", {
+          socket.emit("controls", {
             roomId,
+            options: "next"
           });
         }}
       >
