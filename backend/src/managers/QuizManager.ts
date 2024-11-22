@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import { Quiz } from "../Quiz";
 
 let globalProblemId = 0;
@@ -58,12 +59,12 @@ export class QuizManager {
     quiz.sendLeaderboard();
   }
 
-  sendData(roomId: string) {
+  sendData(roomId: string, socket: Socket) {
     const quiz = this.getQuiz(roomId);
     if (!quiz) {
       return;
     }
-    quiz.sendData();
+    quiz.sendData(socket);
   }
 
   addUser(roomId: string, name: string) {

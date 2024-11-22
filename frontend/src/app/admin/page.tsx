@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 
 export default function Admin() {
   const [loged, setLoged] = useState(false);
-  const [roomId, setRoomId] = useState("123");
+  const [roomId, setRoomId] = useState("");
 
   if (!loged) {
     return (
@@ -24,7 +24,6 @@ export default function Admin() {
           }}
           autoComplete="false"
           placeholder="1234 5678"
-          value={123}
         />
         <Button
           className="mt-3"

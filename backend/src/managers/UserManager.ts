@@ -36,7 +36,10 @@ export class UserManager {
       });
 
       socket.on("sendData", (data) => {
-        this.quizManager.sendData(data.roomId);
+        socket.emit("data", {
+          word: "hello world"
+        })
+        this.quizManager.sendData(data.roomId, socket);
       })
     });
 

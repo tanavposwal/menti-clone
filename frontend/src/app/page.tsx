@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function Home() {
-  const [name, setName] = useState("test bot");
+  const [name, setName] = useState("");
   const [log, setLog] = useState(false);
-  const [code, setCode] = useState("123");
+  const [code, setCode] = useState("");
 
   if (!log) {
     return (
@@ -89,8 +89,7 @@ export const UserLoggedin = ({
     
     socket.on("ended", (data) => {
       setCurrentState("ended");
-      setLeaderboard(data.leaderboard);
-    }); // add to ui
+    });
     
     socket.on("not_started", (data) => {
       setCurrentState("not_started");
@@ -108,7 +107,7 @@ export const UserLoggedin = ({
         <div className="w-lg-screen flex flex-col h-fit items-center gap-5">
           <h2 className="text-4xl font-bold">Get ready to play {name}!</h2>
           <h3 className="text-muted-foreground">answer fast to score more points, admin will start the quiz soon</h3>
-          <Image src="/loading-gif.gif" alt="loading" width={500} height={500} className="w-8 select-none" draggable="false" />
+          <Image src="/loading-gif.gif" alt="loading" width={500} height={500} className="w-5 select-none" draggable="false" />
         </div>
       </section>
     );
@@ -140,7 +139,7 @@ export const UserLoggedin = ({
         <div className="w-lg-screen flex flex-col h-fit items-center gap-5">
           <h1 className="text-4xl font-bold">Lets see how you did!</h1>
           <h3 className="text-muted-foreground">admin can see your leaderboard now</h3>
-          <Image src="/loading-gif.gif" alt="loading" width={500} height={500} className="w-8 select-none" draggable="false" />
+          <Image src="/loading-gif.gif" alt="loading" width={500} height={500} className="w-5 select-none" draggable="false" />
         </div>
       </section>
     );

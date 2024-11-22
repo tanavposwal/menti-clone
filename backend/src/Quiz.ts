@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import { IoManager } from "./managers/IoManager";
 import randomstring from "randomstring";
 
@@ -70,10 +71,11 @@ export class Quiz {
     if (existingSubmission) return;
     // increase points
     if (problem.answer == submission) {
-      user.points +=
-        1000 -
-        (500 * (new Date().getTime() - problem.startTime.getTime())) /
-          (PER_PROBLEM_TIME * 1000);
+      // user.points +=
+      //   1000 -
+      //   (500 * (new Date().getTime() - problem.startTime.getTime())) /
+      //     (PER_PROBLEM_TIME * 1000);
+      user.points += 1;
     }
     problem.submissions.push({
       problemId,
@@ -90,7 +92,7 @@ export class Quiz {
   setActiveProblem(problem: Problem) {
     this.currentState = "question";
     problem.startTime = new Date();
-    problem.submissions = [];
+    // problem.submissions = [];
     io.to(this.roomId).emit("problem", {
       problem,
     });
@@ -104,8 +106,8 @@ export class Quiz {
     });
   }
 
-  sendData() {
-    io.to(this.roomId).emit("data", {
+  sendData(socket: Socket) {
+    socket.emit("data", {
       problems: this.problems,
       activeProblem: this.activeProblem,
       users: this.users,
@@ -124,9 +126,7 @@ export class Quiz {
     if (options == "togglePlay") {
       if (this.currentState == "question") {
         this.currentState = "ended";
-        io.to(this.roomId).emit("ended", {
-          leaderboard: this.getLeaderboard(),
-        });
+        io.to(this.roomId).emit("ended");
       }
       if (!this.hasStarted) {
         this.hasStarted = true;
@@ -134,15 +134,13 @@ export class Quiz {
       }
     }
     if (options == "next") {
-      this.activeProblem++;
-      const problem = this.problems[this.activeProblem];
+      const problem = this.problems[this.activeProblem+1];
       if (problem) {
+        this.activeProblem++;
         this.setActiveProblem(problem);
       } else {
         this.currentState = "ended";
-        io.to(this.roomId).emit("ended", {
-          leaderboard: this.getLeaderboard(),
-        });
+        io.to(this.roomId).emit("ended");
       }
     }
     if (options == "previous") {
@@ -163,7 +161,6 @@ export class Quiz {
     if (this.currentState === "ended") {
       return {
         type: "ended",
-        leaderboard: this.getLeaderboard(),
       };
     }
     if (this.currentState === "leaderboard") {

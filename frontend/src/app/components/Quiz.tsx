@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import RoomId from "./RoomId";
 import Timer from "./Timer";
+import Info from "../admin/Info";
 
 export function Quiz({
   quizData,
@@ -97,6 +98,7 @@ function SingleQuiz({
       <div>
       <Label className="mt-10 opacity-70">Q{problemId + 1}</Label>
       {/* <Timer /> */}
+      {/* <Info roomId={"123"} /> */}
       </div>
       <div className="text-4xl font-extrabold">{title}</div>
       {imageURL && <img src={imageURL} alt="" className="border rounded-lg mt-6 max-w-full" />}
